@@ -4,17 +4,19 @@
 
 namespace ArkanoidGame
 {
-	class Ball : public GameObject
-	{
-	public:
-		void Init();
-		void Update(float timeDelta);
-
-		void ReboundFromPlatform(const sf::Vector2f& platformPosition, float platformWidth);
-		void ReboundFromBrick();
-	private:
-		sf::Vector2f direction;
-	};
+    class Ball : public GameObject
+    {
+    public:
+        void Init();
+        void Update(float timeDelta);
+        void HandleBoundaryCollisions();
+        void ReboundFromPlatform(const sf::Vector2f& platformPosition, float platformWidth);
+        void ReboundFromBrick(const sf::FloatRect& brickRect);
+        const sf::Vector2f& GetDirection() const { return direction; }
+        void SetPosition(const sf::Vector2f& position);
+    private:
+        sf::Vector2f direction;
+        void NormalizeDirection();
+        void Reflect(const sf::Vector2f& normal);
+    };
 }
-
-

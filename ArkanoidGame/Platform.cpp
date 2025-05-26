@@ -39,16 +39,25 @@ namespace ArkanoidGame
 		sprite.setPosition(position);
 	}
 
-	bool Platform::CheckCollisionWithBall(const Ball& ball)
-	{
-		const sf::FloatRect platformRect = GetRect();
-		const sf::Vector2f ballPos = ball.GetPosition();
-		const float ballRadius = BALL_SIZE / 2.0f;
-
-		if (ballPos.y + ballRadius < platformRect.top)
-			return false;
-
-		return ballPos.x + ballRadius > platformRect.left &&
-			ballPos.x - ballRadius < platformRect.left + platformRect.width;
-	}
+	bool Platform::CheckCollisionWithBall(const Ball& ball) const
+{
+    sf::FloatRect platformRect = sprite.getGlobalBounds();
+    sf::FloatRect ballRect = ball.GetRect();
+    
+    if (!platformRect.intersects(ballRect))
+        return false;
+  
+    sf::Vector2f ballCenter = ball.GetPosition();
+    float ballRadius = BALL_SIZE / 2.0f;
+ 
+    if (ballCenter.y + ballRadius > platformRect.top && 
+        ballCenter.y - ballRadius < platformRect.top &&
+        ballCenter.x > platformRect.left && 
+        ballCenter.x < platformRect.left + platformRect.width)
+    {
+        return true;
+    }
+    
+    return false;
+}
 }

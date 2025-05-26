@@ -49,10 +49,10 @@
     <ClCompile Include="Brick.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="GameObject.cpp">
+    <ClCompile Include="GameState.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
-    <ClCompile Include="GameState.cpp">
+    <ClCompile Include="GameObject.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
   </ItemGroup>

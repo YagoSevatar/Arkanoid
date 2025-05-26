@@ -56,7 +56,7 @@ namespace ArkanoidGame
 				);
 			}
 		}
-	
+
 		gameOverSound.setBuffer(gameOverSoundBuffer);
 	}
 
@@ -72,62 +72,58 @@ namespace ArkanoidGame
 	}
 
 	void GameStatePlayingData::Update(float timeDelta)
-	{
-		platform.Update(timeDelta);
-		ball.Update(timeDelta);
+    {
+        platform.Update(timeDelta);
+        sf::Vector2f oldBallPos = ball.GetPosition();
+        ball.Update(timeDelta);
+        sf::Vector2f newBallPos = ball.GetPosition();
+        ball.HandleBoundaryCollisions();
+        const bool isCollisionWithPlatform = platform.CheckCollisionWithBall(ball);
+        if (isCollisionWithPlatform) {
+            ball.ReboundFromPlatform(platform.GetPosition(), platform.GetRect().width);
+            sf::Vector2f ballPos = ball.GetPosition();
+            ballPos.y = platform.GetRect().top - BALL_SIZE / 2.0f;
+            ball.SetPosition(ballPos);
+        }
 
-		sf::Vector2f ballPos = ball.GetPosition();
-		if (ballPos.x <= BALL_SIZE / 2 || ballPos.x >= SCREEN_WIDTH - BALL_SIZE / 2) {
-			ball.ReboundFromBrick(); 
-		}
-		if (ballPos.y <= BALL_SIZE / 2) {
-			ball.ReboundFromBrick(); 
-		}
+        for (auto it = bricks.begin(); it != bricks.end(); )
+        {
+            if (!it->IsDestroyed() && ball.GetRect().intersects(it->GetBounds()))
+            {
+                ball.ReboundFromBrick(it->GetBounds());
+                it->Destroy();
+                score += 1;
+                scoreText.setString("Score: " + std::to_string(score));
+                break; 
+            }
+            else
+            {
+                ++it;
+            }
+        }
 
-		if (platform.CheckCollisionWithBall(ball) && ball.GetPosition().y < platform.GetRect().top)
-		{
-			ball.ReboundFromPlatform(
-				platform.GetPosition(),
-				platform.GetRect().width
-			);
-		}
+        bricks.erase(
+            std::remove_if(bricks.begin(), bricks.end(),
+                [](const Brick& brick) { return brick.IsDestroyed(); }),
+            bricks.end()
+        );
 
-		for (auto it = bricks.begin(); it != bricks.end(); )
-		{
-			if (!it->IsDestroyed() && ball.GetRect().intersects(it->GetBounds()))
-			{
-				it->Destroy();
-				ball.ReboundFromBrick();
-				score += 1;
-				scoreText.setString("Score: " + std::to_string(score));
-				break;
-			}
-			else
-			{
-				++it;
-			}
-		}
-		bricks.erase(
-			std::remove_if(bricks.begin(), bricks.end(),
-				[](const Brick& brick) { return brick.IsDestroyed(); }),
-			bricks.end()
-		);
-		if (bricks.empty())
-		{
-			gameOverSound.play();
-			Game& game = Application::Instance().GetGame();
-			game.UpdateRecord(PLAYER_NAME, score);
-			game.PushState(GameStateType::GameOver, false);
-		}
+        if (bricks.empty())
+        {
+            gameOverSound.play();
+            Game& game = Application::Instance().GetGame();
+            game.UpdateRecord(PLAYER_NAME, score);
+            game.PushState(GameStateType::GameOver, false);
+        }
 
-		if (ballPos.y > SCREEN_HEIGHT)
-		{
-			gameOverSound.play();
-			Game& game = Application::Instance().GetGame();
-			game.UpdateRecord(PLAYER_NAME, score);
-			game.PushState(GameStateType::GameOver, false);
-		}
-	}
+        if (newBallPos.y > SCREEN_HEIGHT)
+        {
+            gameOverSound.play();
+            Game& game = Application::Instance().GetGame();
+            game.UpdateRecord(PLAYER_NAME, score);
+            game.PushState(GameStateType::GameOver, false);
+        }
+    }
 	void GameStatePlayingData::Draw(sf::RenderWindow& window)
 	{
 		window.draw(background);

@@ -3,53 +3,115 @@
 #include "Sprite.h"
 #include <assert.h>
 #include "Platform.h"
+#include <cmath>
+
 namespace
 {
-	// id textures
-	const std::string TEXTURE_ID = "ball";
+    const std::string TEXTURE_ID = "ball";
 }
 
 namespace ArkanoidGame
 {
-	void Ball::Init()
-	{
-		assert(texture.loadFromFile(TEXTURES_PATH + TEXTURE_ID + ".png"));
+    void Ball::Init()
+    {
+        assert(texture.loadFromFile(TEXTURES_PATH + TEXTURE_ID + ".png"));
 
-		InitSprite(sprite, BALL_SIZE, BALL_SIZE, texture);
-		sprite.setPosition({ SCREEN_WIDTH / 2.0, SCREEN_HEIGHT - PLATFORM_HEIGHT - BALL_SIZE / 2.f });
+        InitSprite(sprite, BALL_SIZE, BALL_SIZE, texture);
+        sprite.setPosition({ SCREEN_WIDTH / 2.0f, SCREEN_HEIGHT - PLATFORM_HEIGHT - BALL_SIZE / 2.f });
 
-		const float angle = 45.f + rand() % 90; // [45, 135] degree
-		const auto pi = std::acos(-1.f);
-		direction.x = std::cos(pi / 180.f * angle);
-		direction.y = std::sin(pi / 180.f * angle);
-	}
+      
+        const float angle = 30.f + rand() % 120;
+        const float radians = angle * 3.14159265f / 180.f;
+        direction.x = std::cos(radians);
+        direction.y = -std::sin(radians); 
+        NormalizeDirection();
+    }
 
-	void Ball::Update(float timeDelta)
-	{
-		const auto pos = sprite.getPosition() + BALL_SPEED * timeDelta * direction;
-		sprite.setPosition(pos);
+    void Ball::Update(float timeDelta)
+    {
+        sf::Vector2f movement;
+        movement.x = direction.x * BALL_SPEED * timeDelta;
+        movement.y = direction.y * BALL_SPEED * timeDelta;
+        sprite.move(movement);
 
-		if (pos.x <= 0 || pos.x >= SCREEN_WIDTH) {
-			direction.x *= -1;
-		}
+        HandleBoundaryCollisions();
+    }
 
-		if (pos.y <= 0 || pos.y >= SCREEN_HEIGHT) {
-			direction.y *= -1;
-		}
-	}
+    void Ball::HandleBoundaryCollisions()
+    {
+        const float radius = BALL_SIZE / 2.0f;
+        const sf::Vector2f pos = sprite.getPosition();
 
-	void Ball::ReboundFromPlatform(const sf::Vector2f& platformPosition, float platformWidth)
-	{
-		float hitPosition = (GetPosition().x - platformPosition.x) / (platformWidth / 2.0f);
-		direction.x = hitPosition * 0.5f; 
-		direction.y = -fabs(direction.y); 
+        if (pos.x < radius) {
+            Reflect({ 1.0f, 0.0f });
+            sprite.setPosition(radius, pos.y);
+        }
 
-		float length = sqrt(direction.x * direction.x + direction.y * direction.y);
-		direction.x /= length;
-		direction.y /= length;
-	}
-	void Ball::ReboundFromBrick()
-	{
-		direction.y *= -1; 
-	}
+        else if (pos.x > SCREEN_WIDTH - radius) {
+            Reflect({ -1.0f, 0.0f });
+            sprite.setPosition(SCREEN_WIDTH - radius, pos.y);
+        }
+
+        if (pos.y < radius) {
+            Reflect({ 0.0f, 1.0f });
+            sprite.setPosition(pos.x, radius);
+        }
+    }
+
+    void Ball::ReboundFromPlatform(const sf::Vector2f& platformPos, float platformWidth)
+    {
+        float hitPosition = (GetPosition().x - platformPos.x) / (platformWidth / 2.0f);
+        hitPosition = std::clamp(hitPosition, -0.9f, 0.9f);
+
+        const float maxAngle = 60.0f * 3.14159265f / 180.0f;
+        float angle = maxAngle * hitPosition;
+
+        direction.x = std::sin(angle);
+        direction.y = -std::abs(std::cos(angle)); 
+        NormalizeDirection();
+    }
+
+    void Ball::ReboundFromBrick(const sf::FloatRect& brickRect)
+    {
+      
+        sf::FloatRect ballRect = GetRect();
+        float overlapLeft = ballRect.left + ballRect.width - brickRect.left;
+        float overlapRight = brickRect.left + brickRect.width - ballRect.left;
+        float overlapTop = ballRect.top + ballRect.height - brickRect.top;
+        float overlapBottom = brickRect.top + brickRect.height - ballRect.top;
+
+        bool fromLeft = overlapLeft < overlapRight && overlapLeft < overlapTop && overlapLeft < overlapBottom;
+        bool fromRight = overlapRight < overlapLeft && overlapRight < overlapTop && overlapRight < overlapBottom;
+        bool fromTop = overlapTop < overlapLeft && overlapTop < overlapRight && overlapTop < overlapBottom;
+        bool fromBottom = overlapBottom < overlapLeft && overlapBottom < overlapRight && overlapBottom < overlapTop;
+
+        if (fromLeft || fromRight) {
+            Reflect({ fromLeft ? 1.0f : -1.0f, 0.0f });
+        }
+        else {
+            Reflect({ 0.0f, fromTop ? 1.0f : -1.0f });
+        }
+    }
+
+    void Ball::Reflect(const sf::Vector2f& normal)
+    {
+        float dotProduct = direction.x * normal.x + direction.y * normal.y;
+        direction.x -= 2 * dotProduct * normal.x;
+        direction.y -= 2 * dotProduct * normal.y;
+        NormalizeDirection();
+    }
+
+    void Ball::NormalizeDirection()
+    {
+        float length = std::sqrt(direction.x * direction.x + direction.y * direction.y);
+        if (length > 0) {
+            direction.x /= length;
+            direction.y /= length;
+        }
+    }
+
+    void Ball::SetPosition(const sf::Vector2f& position)
+    {
+        sprite.setPosition(position);
+    }
 }
