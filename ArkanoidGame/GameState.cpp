@@ -4,7 +4,7 @@
 #include "GameStatePauseMenu.h"
 #include "GameStateMainMenu.h"
 #include "GameStateRecords.h"
-
+#include "GameStateVictory.h"
 #include <assert.h>
 
 
@@ -45,6 +45,13 @@ namespace ArkanoidGame
 			data = new GameStateRecordsData();
 			((GameStateRecordsData*)data)->Init();
 			break;
+
+		}
+		case GameStateType::Victory:
+		{
+			data = new GameStateVictoryData();
+			((GameStateVictoryData*)data)->Init(0); 
+			break;
 		}
 		default:
 			assert(false); // We want to know if we forgot to implement new game state
@@ -80,6 +87,11 @@ namespace ArkanoidGame
 			case GameStateType::Records:
 			{
 				delete ((GameStateRecordsData*)data);
+				break;
+			}
+			case GameStateType::Victory:
+			{
+				delete ((GameStateVictoryData*)data);
 				break;
 			}
 			default:
@@ -120,6 +132,11 @@ namespace ArkanoidGame
 			((GameStateRecordsData*)data)->Update(timeDelta);
 			break;
 		}
+		case GameStateType::Victory:
+		{
+			((GameStateVictoryData*)data)->Update(timeDelta);
+			break;
+		}
 		default:
 			assert(false); // We want to know if we forgot to implement new game state
 			break;
@@ -155,6 +172,11 @@ namespace ArkanoidGame
 			((GameStateRecordsData*)data)->Draw(window);
 			break;
 		}
+		case GameStateType::Victory:
+		{
+			((GameStateVictoryData*)data)->Draw(window);
+			break;
+		}
 		default:
 			assert(false); // We want to know if we forgot to implement new game state
 			break;
@@ -188,6 +210,11 @@ namespace ArkanoidGame
 		case GameStateType::Records:
 		{
 			((GameStateRecordsData*)data)->HandleWindowEvent(event);
+			break;
+		}
+		case GameStateType::Victory:
+		{
+			((GameStateVictoryData*)data)->HandleWindowEvent(event);
 			break;
 		}
 		default:
@@ -231,10 +258,20 @@ namespace ArkanoidGame
 			*((GameStateRecordsData*)data) = *(GameStateRecordsData*)state.data;
 			break;
 		}
+		case GameStateType::Victory:
+		{
+			data = new GameStateVictoryData();
+			*((GameStateVictoryData*)data) = *(GameStateVictoryData*)state.data;
+			break;
+		}
 		default:
 			assert(false); // We want to know if we forgot to implement new game state
 			break;
 		}
+		return data;
+	}
+	void* GameState::GetData() const
+	{
 		return data;
 	}
 }

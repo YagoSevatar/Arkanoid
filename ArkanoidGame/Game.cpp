@@ -139,6 +139,9 @@ namespace ArkanoidGame
 
 	void Game::SwitchStateTo(GameStateType newState)
 	{
+		if (newState == GameStateType::Playing) {
+			isGameCompleted = false;
+		}
 		pendingGameStateType = newState;
 		pendingGameStateIsExclusivelyVisible = false;
 		stateChangeType = GameStateChangeType::Switch;
@@ -169,5 +172,9 @@ namespace ArkanoidGame
 	void Game::UpdateRecord(const std::string& playerId, int score)
 	{
 		recordsTable[playerId] = std::max(recordsTable[playerId], score);
+	}
+	GameState& Game::GetCurrentState()
+	{
+		return stateStack.back();
 	}
 }

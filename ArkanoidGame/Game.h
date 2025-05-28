@@ -1,6 +1,5 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
 #include "Sprite.h"
 #include "GameSettings.h"
 #include "GameState.h"
@@ -37,14 +36,14 @@ namespace ArkanoidGame
 		bool Update(float timeDelta); // Return false if game should be closed
 		void Draw(sf::RenderWindow& window);
 		void Shutdown();
-
+		GameState& GetCurrentState();
 		bool IsEnableOptions(GameOptions option) const;
 		void SetOption(GameOptions option, bool value);
-
+		bool IsGameCompleted() const { return isGameCompleted; }
 		const RecordsTable& GetRecordsTable() const { return recordsTable; }
 		int GetRecordByPlayerId(const std::string& playerId) const;
 		void UpdateRecord(const std::string& playerId, int score);
-
+		void SetGameCompleted(bool completed) { isGameCompleted = completed; }
 		// Add new game state on top of the stack
 		void PushState(GameStateType stateType, bool isExclusivelyVisible);
 
@@ -60,7 +59,7 @@ namespace ArkanoidGame
 		GameStateChangeType stateChangeType = GameStateChangeType::None;
 		GameStateType pendingGameStateType = GameStateType::None;
 		bool pendingGameStateIsExclusivelyVisible = false;
-
+		bool isGameCompleted = false;
 		GameOptions options = GameOptions::Default;
 		RecordsTable recordsTable;
 	};

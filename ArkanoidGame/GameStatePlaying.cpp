@@ -1,9 +1,11 @@
 #include "GameStatePlaying.h"
+#include "GameStateVictory.h"
 #include "Application.h"
 #include "Game.h"
 #include "Text.h"
 #include <assert.h>
 #include <sstream>
+#include <algorithm>
 
 namespace ArkanoidGame
 {
@@ -108,13 +110,20 @@ namespace ArkanoidGame
             bricks.end()
         );
 
-        if (bricks.empty())
-        {
-            gameOverSound.play();
-            Game& game = Application::Instance().GetGame();
-            game.UpdateRecord(PLAYER_NAME, score);
-            game.PushState(GameStateType::GameOver, false);
-        }
+		if (bricks.empty() && !Application::Instance().GetGame().IsGameCompleted())
+		{
+			Game& game = Application::Instance().GetGame();
+			game.SetGameCompleted(true);
+			game.UpdateRecord(PLAYER_NAME, score);
+			game.PushState(GameStateType::Victory, true);
+
+			GameState& currentState = game.GetCurrentState();
+			if (currentState.GetType() == GameStateType::Victory)
+			{
+				GameStateVictoryData* victoryData = static_cast<GameStateVictoryData*>(currentState.GetData());
+				victoryData->Init(score);
+			}
+		}
 
         if (newBallPos.y > SCREEN_HEIGHT)
         {

@@ -13,6 +13,7 @@ namespace ArkanoidGame
 		GameOver,
 		ExitDialog,
 		Records,
+		Victory,
 	};
 
 	class GameState
@@ -41,7 +42,7 @@ namespace ArkanoidGame
 		T* GetData() const {
 			return static_cast<T>(data);
 		}
-
+		void* GetData() const;
 		void Update(float timeDelta);
 		void Draw(sf::RenderWindow& window);
 		void HandleWindowEvent(sf::Event& event);
