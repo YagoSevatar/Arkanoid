@@ -6,16 +6,16 @@ namespace ArkanoidGame
 {
 	class Ball;
 
-	class Platform : public GameObject
-	{
-	public:
-		void Init();
-		void Update(float timeDelta);
+    class Platform : public GameObject
+    {
+    public:
+        void Init();
+        void Update(float timeDelta) override;  
 
-		bool CheckCollisionWithBall(const Ball& ball) const;
-	private:
-		void Move(float speed);
-	};
+        bool CheckCollisionWithBall(const Ball& ball) const;
+    private:
+        void Move(float speed);
+    };
 }
 
 

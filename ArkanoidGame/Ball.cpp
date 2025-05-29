@@ -58,17 +58,17 @@ namespace ArkanoidGame
         }
     }
 
-    void Ball::ReboundFromPlatform(const sf::Vector2f& platformPos, float platformWidth)
-    {
-        float hitPosition = (GetPosition().x - platformPos.x) / (platformWidth / 2.0f);
-        hitPosition = std::clamp(hitPosition, -0.9f, 0.9f);
-
-        const float maxAngle = 60.0f * 3.14159265f / 180.0f;
-        float angle = maxAngle * hitPosition;
-
-        direction.x = std::sin(angle);
-        direction.y = -std::abs(std::cos(angle)); 
-        NormalizeDirection();
+    void Ball::ReboundFromPlatform(const sf::Vector2f& platformPos, float platformWidth) {
+     
+        float hitPos = ((GetPosition().x - platformPos.x) / platformWidth) * 2.0f - 1.0f;
+        hitPos = std::clamp(hitPos, -0.8f, 0.8f);
+        float directionInfluence = 0.3f * (direction.x > 0 ? 1 : -1);
+        float reboundAngle = (hitPos + directionInfluence) * (70.0f * 3.14159f / 180.0f);
+        direction.x = sin(reboundAngle);
+        direction.y = -cos(reboundAngle);
+        sf::Vector2f newPos = GetPosition();
+        newPos.y = platformPos.y - BALL_SIZE / 2 - 1.0f;
+        SetPosition(newPos);
     }
 
     void Ball::ReboundFromBrick(const sf::FloatRect& brickRect)
@@ -95,9 +95,11 @@ namespace ArkanoidGame
 
     void Ball::Reflect(const sf::Vector2f& normal)
     {
-        float dotProduct = direction.x * normal.x + direction.y * normal.y;
-        direction.x -= 2 * dotProduct * normal.x;
-        direction.y -= 2 * dotProduct * normal.y;
+      
+        float dot = direction.x * normal.x + direction.y * normal.y;
+        direction.x -= 2.0f * dot * normal.x;
+        direction.y -= 2.0f * dot * normal.y;
+
         NormalizeDirection();
     }
 

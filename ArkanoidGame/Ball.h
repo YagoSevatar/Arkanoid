@@ -8,7 +8,7 @@ namespace ArkanoidGame
     {
     public:
         void Init();
-        void Update(float timeDelta);
+        void Update(float timeDelta) override;
         void HandleBoundaryCollisions();
         void ReboundFromPlatform(const sf::Vector2f& platformPosition, float platformWidth);
         void ReboundFromBrick(const sf::FloatRect& brickRect);
