@@ -11,12 +11,22 @@ namespace ArkanoidGame
 	class GameStatePlayingData
 	{
 	public:
+		GameStatePlayingData(const GameStatePlayingData&) = delete;
+		GameStatePlayingData& operator=(const GameStatePlayingData&) = delete;
+
+		GameStatePlayingData(GameStatePlayingData&&) = default;
+		GameStatePlayingData& operator=(GameStatePlayingData&&) = default;
+
+		GameStatePlayingData() = default;
+
 		void Init();
 		void HandleWindowEvent(const sf::Event& event);
 		void Update(float timeDelta);
 		void Draw(sf::RenderWindow& window);
 
+
 	private:
+		void CreateBricks();
 		// Resources
 		sf::Texture appleTexture;
 		sf::Texture rockTexture;
@@ -27,9 +37,9 @@ namespace ArkanoidGame
 		// Game data
 		Platform platform;
 		Ball ball;
-		std::vector<Brick> bricks;
+		std::vector<std::unique_ptr<Brick>> bricks;
 		int score = 0;
-
+		bool gameOverTriggered = false;
 		// UI data
 		sf::Text scoreText;
 		sf::Text inputHintText;

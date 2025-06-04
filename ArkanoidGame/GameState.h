@@ -1,59 +1,43 @@
 #pragma once
 #include <SFML/Graphics.hpp>
-
+#include <memory>
 
 namespace ArkanoidGame
 {
+    enum class GameStateType
+    {
+        None = 0,
+        MainMenu,
+        Playing,
+        GameOver,
+        ExitDialog,
+        Records,
+        Victory,
+    };
 
-	enum class GameStateType
-	{
-		None = 0,
-		MainMenu,
-		Playing,
-		GameOver,
-		ExitDialog,
-		Records,
-		Victory,
-	};
+    class GameState
+    {
+    public:
+        GameState(GameStateType type, bool isExclusivelyVisible);
+        ~GameState();
+        GameState(const GameState&) = delete;
+        GameState& operator=(const GameState&) = delete;
+        GameState(GameState&& other) noexcept;
+        GameState& operator=(GameState&& other) noexcept;
 
-	class GameState
-	{
-	public:
-		GameState() = default;
-		GameState(GameStateType type, bool isExclusivelyVisible);
-		GameState(const GameState& state) = delete;
-		GameState(GameState&& state) { operator=(std::move(state)); }
+        GameStateType GetType() const { return type; }
+        bool IsExclusivelyVisible() const { return isExclusivelyVisible; }
 
-		~GameState();
+        void Update(float timeDelta);
+        void Draw(sf::RenderWindow& window);
+        void HandleWindowEvent(sf::Event& event);
+        void* GetData() const;
 
-		GameState& operator= (const GameState& state) = delete;
-		GameState& operator= (GameState&& state) noexcept {
-			type = state.type;
-			data = state.data;
-			isExclusivelyVisible = state.isExclusivelyVisible;
-			state.data = nullptr;
-			return *this;
-		}
+    private:
+        void Cleanup() noexcept;
 
-		GameStateType GetType() const { return type; }
-		bool IsExclusivelyVisible() const { return isExclusivelyVisible; }
-
-		template<class T>
-		T* GetData() const {
-			return static_cast<T>(data);
-		}
-		void* GetData() const;
-		void Update(float timeDelta);
-		void Draw(sf::RenderWindow& window);
-		void HandleWindowEvent(sf::Event& event);
-
-	private:
-		void* CopyData(const GameState& state) const;
-
-	private:
-		GameStateType type = GameStateType::None;
-		void* data = nullptr;
-		bool isExclusivelyVisible = false;
-	};
-
+        GameStateType type = GameStateType::None;
+        void* data = nullptr;
+        bool isExclusivelyVisible = false;
+    };
 }

@@ -58,6 +58,12 @@
     <ClCompile Include="GameStateVictory.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="DurableBrick.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="SimpleBrick.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -102,6 +108,10 @@
       <Filter>Sources</Filter>
     </ClInclude>
     <ClInclude Include="GameStateVictory.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="DurableBrick.h" />
+    <ClInclude Include="SimpleBrick.h">
       <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>

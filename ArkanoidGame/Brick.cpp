@@ -1,7 +1,6 @@
 #include "Brick.h"
 
-Brick::Brick(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Color& color)
-{
+Brick::Brick(const sf::Vector2f& position, const sf::Vector2f& size, const sf::Color& color) {
     shape.setSize(size);
     shape.setFillColor(color);
     shape.setPosition(position);
@@ -9,8 +8,7 @@ Brick::Brick(const sf::Vector2f& position, const sf::Vector2f& size, const sf::C
     shape.setOutlineColor(sf::Color::Black);
 }
 
-void Brick::Draw(sf::RenderWindow& window) const
-{
+void Brick::Draw(sf::RenderWindow& window) const {
     if (!destroyed)
         window.draw(shape);
 }
