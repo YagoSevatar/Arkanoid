@@ -6,6 +6,7 @@
 #include "GameStatePauseMenu.h"
 #include "GameStateMainMenu.h"
 #include "GameStateRecords.h"
+#include <fstream>
 
 namespace ArkanoidGame
 {
@@ -177,4 +178,7 @@ namespace ArkanoidGame
 	{
 		return stateStack.back();
 	}
+	
+
+	
 }

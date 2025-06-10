@@ -27,6 +27,14 @@ namespace ArkanoidGame
 
 		recordsTableTexts.reserve(MAX_RECORDS_TABLE_SIZE);
 
+		livesText.setFont(font);
+		livesText.setCharacterSize(24);
+		livesText.setFillColor(sf::Color::Green);
+		livesText.setString("Lives remaining: " +
+			std::to_string(Application::Instance().GetGame().GetLives()));
+		livesText.setOrigin(GetTextOrigin(livesText, { 0.5f, 0.5f }));
+		livesText.setPosition(SCREEN_WIDTH / 2.f, SCREEN_HEIGHT / 2.f + 100.f);
+
 		std::multimap<int, std::string> sortedRecordsTable;
 		Game& game = Application::Instance().GetGame();
 		for (const auto& item : game.GetRecordsTable())

@@ -12,7 +12,7 @@ public:
     bool IsDestroyed() const { return destroyed; }
     void Destroy() { destroyed = true; }
     const sf::FloatRect GetBounds() const { return shape.getGlobalBounds(); }
-
+    virtual sf::Vector2f GetPosition() const { return shape.getPosition(); }
 protected:
     sf::RectangleShape shape;
     bool destroyed = false;

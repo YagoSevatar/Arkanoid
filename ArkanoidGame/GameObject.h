@@ -1,18 +1,14 @@
 #pragma once
-#include "SFML/Graphics.hpp"
+#include <SFML/Graphics.hpp>
 
-namespace ArkanoidGame
-{
-    class GameObject
-    {
+namespace ArkanoidGame {
+    class GameObject {
     public:
         virtual ~GameObject() = default;
-
-        virtual void Draw(sf::RenderWindow& window);
+        virtual void Draw(sf::RenderWindow& window) = 0;
         virtual void Update(float deltaTime) = 0;
-
-        const sf::Vector2f& GetPosition() const { return sprite.getPosition(); }
-        const sf::FloatRect& GetRect() const { return sprite.getGlobalBounds(); }
+        virtual sf::FloatRect GetRect() const = 0;
+        virtual sf::Vector2f GetPosition() const = 0;
 
     protected:
         sf::Sprite sprite;

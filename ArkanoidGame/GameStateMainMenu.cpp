@@ -105,8 +105,6 @@ namespace ArkanoidGame
 		mainMenu.childrens.push_back(options);
 		mainMenu.childrens.push_back(recordsItem);
 		mainMenu.childrens.push_back(exitGameItem);
-
-
 		menu.Init(mainMenu);
 	}
 

@@ -46,4 +46,7 @@ namespace ArkanoidGame
 		return (ballRect.intersects(platformRect) &&
 			ball.GetPosition().y - BALL_SIZE / 2 < platformRect.top + platformRect.height / 2);
 	}
+	void Platform::Draw(sf::RenderWindow& window) {
+		window.draw(sprite);
+	}
 }

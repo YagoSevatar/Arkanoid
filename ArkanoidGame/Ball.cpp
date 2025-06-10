@@ -116,4 +116,7 @@ namespace ArkanoidGame
     {
         sprite.setPosition(position);
     }
+    void Ball::Draw(sf::RenderWindow& window) {
+        window.draw(sprite);
+    }
 }

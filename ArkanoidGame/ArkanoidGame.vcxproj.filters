@@ -64,6 +64,24 @@
     <ClCompile Include="SimpleBrick.cpp">
       <Filter>Sources</Filter>
     </ClCompile>
+    <ClCompile Include="ScoreManager.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="Bonus.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="FireBallBonus.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="PlatformExpandBonus.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="PlatformShrinkBonus.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
+    <ClCompile Include="ExtraLifeBonus.cpp">
+      <Filter>Sources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.h">
@@ -112,6 +130,27 @@
     </ClInclude>
     <ClInclude Include="DurableBrick.h" />
     <ClInclude Include="SimpleBrick.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="IScoreObserver.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="ScoreManager.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="Bonus.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="FireBallBonus.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformExpandBonus.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="PlatformShrinkBonus.h">
+      <Filter>Sources</Filter>
+    </ClInclude>
+    <ClInclude Include="ExtraLifeBonus.h">
       <Filter>Sources</Filter>
     </ClInclude>
   </ItemGroup>

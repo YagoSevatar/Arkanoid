@@ -4,6 +4,7 @@
 #include "GameSettings.h"
 #include "GameState.h"
 #include <unordered_map>
+#include "ScoreManager.h"
 
 namespace ArkanoidGame
 {
@@ -31,7 +32,12 @@ namespace ArkanoidGame
 
 		Game();
 		~Game();
-
+		int GetLives() const { return lives; }
+		void LoseLife() { lives--; }
+		void AddLife() { lives++; }
+		void ResetLives() { lives = 3; }
+		ScoreManager& GetScoreManager() { return scoreManager; }
+		int GetCurrentScore() const { return scoreManager.GetCurrentScore(); }
 		void HandleWindowEvents(sf::RenderWindow& window);
 		bool Update(float timeDelta); // Return false if game should be closed
 		void Draw(sf::RenderWindow& window);
@@ -62,5 +68,7 @@ namespace ArkanoidGame
 		bool isGameCompleted = false;
 		GameOptions options = GameOptions::Default;
 		RecordsTable recordsTable;
+		ScoreManager scoreManager;
+		int lives = 3;
 	};
 }

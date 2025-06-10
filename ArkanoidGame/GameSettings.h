@@ -17,12 +17,11 @@ namespace ArkanoidGame
 	const float TIME_PER_FRAME = 1.f / 60.f; // 60 fps
 
 	const unsigned int BALL_SIZE = 20;
-	const unsigned int BALL_SPEED = 400;
-
+	const float BONUS_SIZE = 30.0f;
 	const unsigned int PLATFORM_WIDTH = 60;
 	const unsigned int PLATFORM_HEIGHT = 20;
 	const float PLATFORM_SPEED = 400.f;
-
+	const unsigned int BALL_SPEED = 400;
 	const int MAX_RECORDS_TABLE_SIZE = 5;
 	extern const char* PLAYER_NAME; // We need to define this constant in some CPP
 
